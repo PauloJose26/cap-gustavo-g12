@@ -1,0 +1,16 @@
+def register_user():
+    ...
+
+def update_user(user_id):
+    ...
+
+def delete_user(user_id):
+    ...
+
+def get_user():
+    # adm route
+    ...
+
+def get_user_by_id(user_id):
+    # adm route
+    ...
