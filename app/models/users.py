@@ -11,7 +11,6 @@ class User(Model):
     name = Column(String(60), nullable=False)
     cpf = Column(String(11), nullable=False, unique=True)
     email = Column(String(100), nullable=False, unique=True)
-    country_code = Column(String(3), nullable=False)
     phone_number = Column(String(12), nullable=False)
     birth_date = Column(Date, nullable=False)
     password_hash = Column(String(511), nullable=False)
