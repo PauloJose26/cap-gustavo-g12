@@ -1,10 +1,20 @@
+from dataclasses import dataclass
+from datetime import date
 from flask_sqlalchemy import Model
 from sqlalchemy import Column, String, Date, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
 
-
+@dataclass
 class User(Model):
+    id: int
+    name: str
+    cpf: str
+    email: str
+    country_code: str
+    phone_number: str
+    birth_date: date
+    password_hash: str
     __tablename__ = "users"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
