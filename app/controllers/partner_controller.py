@@ -1,0 +1,6 @@
+def get_partners():
+    ...
+
+def get_partner_by_id(partner_id):
+    ...
+    
