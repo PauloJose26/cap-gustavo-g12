@@ -4,13 +4,14 @@ from flask_sqlalchemy import Model
 from sqlalchemy import Column, String, Numeric, DateTime, Boolean, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
+from decimal import Decimal
 
 @dataclass
 class Product(Model):
     id: int
     name: str
     description: str
-    starting_price: float
+    starting_price: Decimal
     auction_start: datetime
     auction_end: datetime
     active: bool
