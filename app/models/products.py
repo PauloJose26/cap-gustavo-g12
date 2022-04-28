@@ -13,5 +13,5 @@ class Product(Model):
     starting_price = Column(Numeric(asdecimal=True), nullable=False)
     auction_start = Column(DateTime)
     auction_end = Column(DateTime)
-    active = Column(Boolean, nullable=False, default=True)
+    active = Column(Boolean, nullable=False, default=False)
     id_partner = Column(UUID(as_uuid=True), ForeignKey("partners.id"), nullable=False)
