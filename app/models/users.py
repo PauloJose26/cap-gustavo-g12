@@ -11,7 +11,6 @@ class User(Model):
     name: str
     cpf: str
     email: str
-    country_code: str
     phone_number: str
     birth_date: date
     password_hash: str

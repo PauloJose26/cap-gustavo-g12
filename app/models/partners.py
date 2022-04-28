@@ -10,7 +10,6 @@ class Partner(Model):
     name: str
     email: str
     cnpj: str
-    country_code: str
     phone_number: str
     about: str
     __tablename__ = "partners"
