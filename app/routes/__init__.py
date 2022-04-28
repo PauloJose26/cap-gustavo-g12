@@ -9,9 +9,8 @@ bp_api = Blueprint("api", __name__, url_prefix="/api")
 
 def init_app(app: Flask):
 
-    bp_partner.register_blueprint(bp_products)
-    bp_partner.register_blueprint(bp_bids)
-
+    bp_api.register_blueprint(bp_products)
+    bp_api.register_blueprint(bp_bids)
     bp_api.register_blueprint(bp_partner)
     bp_api.register_blueprint(bp_users)
     bp_api.register_blueprint(bp_category)
