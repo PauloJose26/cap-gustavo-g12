@@ -1,10 +1,14 @@
+from dataclasses import dataclass
 from flask_sqlalchemy import Model
 from sqlalchemy import Column, Numeric, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
+from decimal import Decimal
 
-
+@dataclass
 class Bid(Model):
+    id: int
+    price: Decimal
     __tablename__ = "bids"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)

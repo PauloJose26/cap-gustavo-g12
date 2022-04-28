@@ -1,10 +1,20 @@
+from dataclasses import dataclass
+from datetime import datetime
 from flask_sqlalchemy import Model
 from sqlalchemy import Column, String, Numeric, DateTime, Boolean, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
+from decimal import Decimal
 
-
+@dataclass
 class Product(Model):
+    id: int
+    name: str
+    description: str
+    starting_price: Decimal
+    auction_start: datetime
+    auction_end: datetime
+    active: bool
     __tablename__ = "products"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
