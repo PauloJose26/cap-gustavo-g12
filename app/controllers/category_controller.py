@@ -29,13 +29,14 @@ def register_category():
     data["name"] = name
 
     
-    new_category = CategorieModel(**data)
+    
     try:
+        new_category = CategorieModel(**data)
         current_app.db.session.add(new_category)
         current_app.db.session.commit()
         
         return jsonify(new_category), HTTPStatus.CREATED
-    except IntegrityError:
+    except:
         #UNIQUE CONSTRAINT NOT WORKING. MUST CORRECT.
         return {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
     
