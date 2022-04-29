@@ -15,6 +15,8 @@ class ProductModel(db.Model):
     auction_start: datetime
     auction_end: datetime
     active: bool
+    id_partner = int
+    
     __tablename__ = "products"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
