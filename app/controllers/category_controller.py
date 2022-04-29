@@ -31,7 +31,7 @@ def register_category():
     new_category = CategorieModel(**data)
     try:
         current_app.db.session.add(new_category)
-        current_app.db.commit()
+        current_app.db.session.commit()
         
         return jsonify(new_category), HTTPStatus.CREATED
     except IntegrityError:
