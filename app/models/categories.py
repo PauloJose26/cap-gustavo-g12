@@ -3,9 +3,10 @@ from flask_sqlalchemy import Model
 from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
+from app.config.database import db
 
 @dataclass
-class Categorie(Model):
+class CategorieModel(db.Model):
     id: int
     name: str
     description: str
