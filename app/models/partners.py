@@ -3,9 +3,10 @@ from flask_sqlalchemy import Model
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
+from app.config.database import db
 
 @dataclass
-class Partner(Model):
+class PartnerModel(db.Model):
     id: int
     name: str
     email: str

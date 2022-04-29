@@ -4,9 +4,10 @@ from sqlalchemy import Column, Numeric, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
 from decimal import Decimal
+from app.config.database import db
 
 @dataclass
-class Bid(Model):
+class BidModel(db.Model):
     id: int
     price: Decimal
     __tablename__ = "bids"

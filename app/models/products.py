@@ -5,9 +5,9 @@ from sqlalchemy import Column, String, Numeric, DateTime, Boolean, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
 from decimal import Decimal
-
+from app.config.database import db
 @dataclass
-class Product(Model):
+class ProductModel(db.Model):
     id: int
     name: str
     description: str

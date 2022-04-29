@@ -1,3 +1,4 @@
+
 def register_product():
     # partner_id = request.args.get("partner_id")
     ...

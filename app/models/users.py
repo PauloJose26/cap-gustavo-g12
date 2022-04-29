@@ -4,9 +4,9 @@ from flask_sqlalchemy import Model
 from sqlalchemy import Column, String, Date, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
-
+from app.config.database import db
 @dataclass
-class User(Model):
+class UserModel(db.Model):
     id: int
     name: str
     cpf: str
