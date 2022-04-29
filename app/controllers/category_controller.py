@@ -35,5 +35,30 @@ def register_category():
         
         return jsonify(new_category), HTTPStatus.CREATED
     except IntegrityError:
-        return {"erro": "Categoria já existente no sistema"}, HTTPStatus.CONFLICT
+        return {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
     
+def patch_category(category_id):
+    data = request.get_json()
+
+    category = CategorieModel.query.get(category_id)
+
+    
+    for key, value in data.items():
+        setattr(category, key, value.capitalize())
+    
+    
+    try:
+        current_app.db.session.add(category)
+        current_app.db.session.commit()
+
+        return jsonify(category)
+    except IntegrityError:
+        {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
+        
+def delete_category(category_id):
+    query = CategorieModel.query.get(category_id)
+
+    current_app.db.session.delete(query)
+    current_app.db.session.commit()
+
+    return {f'A categoria {query["name"]} foi removida com sucesso.'}, HTTPStatus.OK
