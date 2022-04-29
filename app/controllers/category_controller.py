@@ -36,8 +36,8 @@ def register_category():
         current_app.db.session.commit()
         
         return jsonify(new_category), HTTPStatus.CREATED
-    except:
-        #UNIQUE CONSTRAINT NOT WORKING. MUST CORRECT.
+    except IntegrityError:
+        
         return {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
     
 def patch_category(category_id):
@@ -56,7 +56,7 @@ def patch_category(category_id):
 
         return jsonify(category)
     except IntegrityError:
-        {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
+        return {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
         
 def delete_category(category_id):
     query = CategorieModel.query.get(category_id)
