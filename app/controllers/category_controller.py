@@ -8,6 +8,7 @@ def get_categories():
 
     serializer = [
         {
+            "id": category.id,
             "name": category.name,
             "description": category.description
         } for category in categories
@@ -17,7 +18,7 @@ def get_categories():
 
 
 def get_category_by_id(category_id):
-    category = current_app.db.sesson.query(CategorieModel).get(category_id)
+    category = current_app.db.session.query(CategorieModel).get(category_id)
     
     return jsonify(category)
 
@@ -28,13 +29,15 @@ def register_category():
     data["name"] = name
 
     
-    new_category = CategorieModel(**data)
+    
     try:
+        new_category = CategorieModel(**data)
         current_app.db.session.add(new_category)
-        current_app.db.commit()
+        current_app.db.session.commit()
         
         return jsonify(new_category), HTTPStatus.CREATED
     except IntegrityError:
+        
         return {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
     
 def patch_category(category_id):
@@ -53,7 +56,7 @@ def patch_category(category_id):
 
         return jsonify(category)
     except IntegrityError:
-        {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
+        return {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
         
 def delete_category(category_id):
     query = CategorieModel.query.get(category_id)
@@ -61,4 +64,4 @@ def delete_category(category_id):
     current_app.db.session.delete(query)
     current_app.db.session.commit()
 
-    return {f'A categoria {query["name"]} foi removida com sucesso.'}, HTTPStatus.OK
+    return {"sucesso":"A categoria foi removida com sucesso"}, HTTPStatus.OK
