@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 from datetime import datetime
-from flask_sqlalchemy import Model
 from sqlalchemy import Column, String, Numeric, DateTime, Boolean, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship, backref
 from uuid import uuid4
 from decimal import Decimal
 from app.config.database import db
+
+
 @dataclass
 class ProductModel(db.Model):
     id: int
@@ -27,3 +29,5 @@ class ProductModel(db.Model):
     auction_end = Column(DateTime)
     active = Column(Boolean, nullable=False, default=False)
     id_partner = Column(UUID(as_uuid=True), ForeignKey("partners.id"), nullable=False)
+    
+    bids = relationship("BidModel", backref=backref("product", uselist=False))
