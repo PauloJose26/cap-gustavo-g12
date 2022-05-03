@@ -10,14 +10,15 @@ from app.config.database import db
 
 @dataclass
 class ProductModel(db.Model):
-    id: int
+    id: str
     name: str
     description: str
     starting_price: Decimal
     auction_start: datetime
     auction_end: datetime
     active: bool
-    id_partner = int
+    id_partner = str
+    task_id = str
     
     __tablename__ = "products"
     
@@ -28,8 +29,8 @@ class ProductModel(db.Model):
     auction_start = Column(DateTime)
     auction_end = Column(DateTime)
     active = Column(Boolean, nullable=False, default=False)
+    task_id = Column(UUID(as_uuid=True), nullable=False, unique=True)
     id_partner = Column(UUID(as_uuid=True), ForeignKey("partners.id"), nullable=False)
-    
     bids = relationship("BidModel", backref=backref("product", uselist=False))
 
     
