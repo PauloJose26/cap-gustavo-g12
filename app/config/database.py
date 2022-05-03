@@ -10,7 +10,8 @@ def init_app(app: Flask):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config['CELERY_BROKER_URL'] = os.getenv('REDIS_URL')
     app.config['CELERY_RESULT_BACKEND'] = os.getenv('REDIS_URL')
-    app.config['HOST'] = 'localhost:5000'
+    app.config['CELERY_BROKER_TRANSPORT_OPTIONS'] = int(os.getenv('TIME_LIMIT'))
+    
     
 
     db.init_app(app)
