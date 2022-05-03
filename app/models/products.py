@@ -10,14 +10,15 @@ from app.config.database import db
 
 @dataclass
 class ProductModel(db.Model):
-    id: int
+    id: str
     name: str
     description: str
     starting_price: Decimal
     auction_start: datetime
     auction_end: datetime
     active: bool
-    id_partner = int
+    id_partner = str
+    task_id = str
     
     __tablename__ = "products"
     
