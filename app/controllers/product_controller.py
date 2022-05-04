@@ -1,6 +1,7 @@
 from itertools import product
 from flask import request,  jsonify
 from app.config.database import db
+from app.models.categories import CategorieModel
 from app.models.products import ProductModel
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm import Query
@@ -15,13 +16,20 @@ def register_product():
 
     session: Session = db.session()
 
-    data = request.get_json()
+    data:dict = request.get_json()
 
     partner_id = "e5a4ab88-73ce-444b-b672-2f1bfa549e7c" #MOCK. Fazer autenticação.
 
     data["partner_id"] = partner_id
     
     try:
+        
+        if data.get("categories"):
+            for i in data["categories"]:
+                product_category = session.query(CategorieModel).filter_by(name = i).first()
+                if product_category:
+                    product_info.categories.append(product_category)
+        
         product_info = ProductModel(**data)
         
         session.add(product_info)
@@ -45,7 +53,6 @@ def register_product():
     except:
         #tratar possíveis erros no registro do produto
         {"erro":"Verifique sua requisição"}, HTTPStatus.BAD_REQUEST
-
 
 
 def update_product(product_id):

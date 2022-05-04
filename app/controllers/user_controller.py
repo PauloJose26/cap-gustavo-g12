@@ -5,18 +5,28 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.orm import Query
 from app.controllers.address_controller import register_address
 from app.models.users import UserModel
+import secrets
+from app.config.auth import auth
 
 def register_user():
     session: Session = db.session()
 
     data = request.get_json()
 
+    password_to_hash = data.pop("password")
+
     address = register_address(data["address"])
 
     data.pop("address")
     data["id_address"] = address.id
 
+    data["api_key"] = secrets.token_urlsafe(32)
+
+    data["role"] = "user"
+
     user_info = UserModel(**data)
+
+    user_info.password = password_to_hash
 
     session.add(user_info)
     session.commit()
@@ -26,10 +36,14 @@ def register_user():
 def update_user(user_id):
     ...
 
+@auth.login_required
 def delete_user(user_id):
     session: Session = db.session()
 
     record = session.query(UserModel).get(user_id)
+
+    if record.role == "admin":
+        return {"error": "Cannot Delete an Admin"}, HTTPStatus.UNAUTHORIZED
 
     session.delete(record)
 
@@ -37,6 +51,7 @@ def delete_user(user_id):
 
     return "", HTTPStatus.NO_CONTENT
 
+@auth.login_required(role='admin')
 def get_user():
     # adm route
     base_query: Query = db.session.query(UserModel)
@@ -48,3 +63,18 @@ def get_user():
 def get_user_by_id(user_id):
     # adm route
     ...
+
+def login():
+    session: Session = db.session()
+
+    data = request.get_json()
+
+    user = session.query(UserModel).filter_by(email=data["email"]).first()
+
+    if not user:
+        return {"error": "User not found"}, HTTPStatus.NOT_FOUND
+
+    if user.verify_password(data["password"]):
+        return {"Access Token": user.api_key}, HTTPStatus.OK
+    else:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED

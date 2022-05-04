@@ -19,6 +19,7 @@ class ProductModel(db.Model):
     active: bool
     partner_id = str
     task_id = str
+    categories = list
     
     __tablename__ = "products"
     
@@ -32,7 +33,7 @@ class ProductModel(db.Model):
     task_id = Column(UUID(as_uuid=True), nullable=True, unique=True)
     partner_id = Column(UUID(as_uuid=True), ForeignKey("partners.id"), nullable=False)
     bids = relationship("BidModel", backref=backref("product", uselist=False))
-
+    categories = relationship("CategorieModel", secondary="product_categorie")
     
     @classmethod
     def verify_data(cls, new_date: datetime):
