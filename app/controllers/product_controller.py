@@ -1,5 +1,5 @@
 from itertools import product
-from flask import request, current_app, jsonify
+from flask import request,  jsonify
 from app.config.database import db
 from app.models.products import ProductModel
 from sqlalchemy.orm.session import Session
@@ -11,30 +11,40 @@ from sqlalchemy.exc import IntegrityError
 
 
 def register_product():
-    from app.tasks.close_auction_task import close_auction
-    
+    from app.tasks import close_auction, open_auction
+
     session: Session = db.session()
 
     data = request.get_json()
 
-    partner_id = 1
+    partner_id = "e5a4ab88-73ce-444b-b672-2f1bfa549e7c" #MOCK. Fazer autenticação.
 
     data["partner_id"] = partner_id
     
-    product_info = ProductModel(**data)
-    
-    session.add(product_info)
-    session.commit()
-    
-    task = close_auction.delay(product_info["id"], data["auction_end"])
-    data["task_id"] = task.id
-    
-    product_info = ProductModel(**data)
-    
-    session.add(product_info)
-    session.commit()
+    try:
+        product_info = ProductModel(**data)
+        
+        session.add(product_info)
+        session.commit()
 
-    return jsonify(product_info), HTTPStatus.CREATED
+        open_time = datetime.strptime(data["auction_start"], "%Y-%m-%d %H:%M") - datetime.now()
+        open_auction.delay(product_info.id, open_time.seconds)
+        
+        close_time = datetime.strptime(data["auction_end"], "%Y-%m-%d %H:%M") - datetime.now()
+        task = close_auction.delay(product_info.id, close_time.seconds)
+        
+        data["task_id"] = task.id
+        
+        product_info = ProductModel(**data)
+        
+        session.add(product_info)
+        session.commit()
+
+
+        return jsonify(product_info), HTTPStatus.CREATED
+    except:
+        #tratar possíveis erros no registro do produto
+        {"erro":"Verifique sua requisição"}, HTTPStatus.BAD_REQUEST
 
 
 
