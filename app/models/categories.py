@@ -7,7 +7,6 @@ from app.config.database import db
 
 @dataclass
 class CategorieModel(db.Model):
-    id: int
     name: str
     description: str
     __tablename__ = "categories"

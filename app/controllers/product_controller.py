@@ -1,6 +1,7 @@
 from itertools import product
 from flask import request, current_app, jsonify
 from app.config.database import db
+from app.models.categories import CategorieModel
 from app.models.products import ProductModel
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm import Query
@@ -13,13 +14,19 @@ from sqlalchemy.exc import IntegrityError
 def register_product():
     session: Session = db.session()
 
-    data = request.get_json()
+    data:dict = request.get_json()
 
     partner_id = 1
 
     data["partner_id"] = partner_id
 
     product_info = ProductModel(**data)
+    
+    if data.get("categories"):
+        for i in data["categories"]:
+            product_category = session.query(CategorieModel).filter_by(name = i).first()
+            if product_category:
+                product_info.categories.append(product_category)
 
     session.add(product_info)
     session.commit()
