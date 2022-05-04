@@ -28,8 +28,8 @@ class ProductModel(db.Model):
     starting_price = Column(Numeric(asdecimal=True), nullable=False)
     auction_start = Column(DateTime)
     auction_end = Column(DateTime)
-    active = Column(Boolean, nullable=False, default=False)
-    task_id = Column(UUID(as_uuid=True), nullable=False, unique=True)
+    active = Column(Boolean, default=False)
+    task_id = Column(UUID(as_uuid=True), nullable=True, unique=True)
     id_partner = Column(UUID(as_uuid=True), ForeignKey("partners.id"), nullable=False)
     bids = relationship("BidModel", backref=backref("product", uselist=False))
 

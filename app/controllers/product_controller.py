@@ -11,6 +11,8 @@ from sqlalchemy.exc import IntegrityError
 
 
 def register_product():
+    from app.tasks.close_auction_task import close_auction
+    
     session: Session = db.session()
 
     data = request.get_json()
@@ -18,9 +20,17 @@ def register_product():
     partner_id = 1
 
     data["partner_id"] = partner_id
-
+    
     product_info = ProductModel(**data)
-
+    
+    session.add(product_info)
+    session.commit()
+    
+    task = close_auction.delay(product_info["id"], data["auction_end"])
+    data["task_id"] = task.id
+    
+    product_info = ProductModel(**data)
+    
     session.add(product_info)
     session.commit()
 
