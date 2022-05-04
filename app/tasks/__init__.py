@@ -16,25 +16,35 @@ celery_init = celery.create_celery_app()
 
 @celery_init.task()
 def close_auction(product_id, auction_end):
-    print(celery_init)
-    print("Task iniciada, dormindo >>>")
+    
+    print("Waiting for close_auction")
     
     sleep(auction_end)
     
     session: Session = db.session()
     product: Query = session.query(ProductModel).get(product_id)
     
-    print("Task completada")
+    print("Close_auction completed")
     
     setattr(product, "active", False)
+    
+    session.add(product)
+    session.commit()
 
 @celery_init.task()
 def open_auction(product_id, auction_start):
-    print("Task iniciada, dormindo >>>")
+    print("Waiting for open_auction")
     
     sleep(auction_start)
     
     session: Session = db.session()
     product: Query = session.query(ProductModel).get(product_id)
     
+    print(product)
+    
+    print("Open_auction complete")
+    
     setattr(product, "active", True)
+    
+    session.add(product)
+    session.commit()

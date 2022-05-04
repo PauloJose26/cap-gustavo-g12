@@ -41,9 +41,8 @@ def register_product():
         close_time = datetime.strptime(data["auction_end"], "%Y-%m-%d %H:%M") - datetime.now()
         task = close_auction.delay(product_info.id, close_time.seconds)
         
-        data["task_id"] = task.id
         
-        product_info = ProductModel(**data)
+        setattr(product_info, "task_id", task.task_id)
         
         session.add(product_info)
         session.commit()
