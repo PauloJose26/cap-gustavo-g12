@@ -2,7 +2,9 @@ from flask import request, current_app, jsonify
 from app.models.categories import CategorieModel
 from http import HTTPStatus
 from sqlalchemy.exc import IntegrityError
+from app.config.auth import auth
 
+@auth.login_required
 def get_categories():
     categories = (current_app.db.session.query(CategorieModel).all())
 
@@ -16,13 +18,13 @@ def get_categories():
     
     return jsonify(serializer)
 
-
+@auth.login_required
 def get_category_by_id(category_id):
     category = current_app.db.session.query(CategorieModel).get(category_id)
     
     return jsonify(category)
 
-
+@auth.login_required(role="admin")
 def register_category():
     data = request.get_json()
     name = data["name"].capitalize()
@@ -39,7 +41,8 @@ def register_category():
     except IntegrityError:
         
         return {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
-    
+
+@auth.login_required(role="admin")   
 def patch_category(category_id):
     data = request.get_json()
 
@@ -57,7 +60,8 @@ def patch_category(category_id):
         return jsonify(category)
     except IntegrityError:
         return {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
-        
+
+@auth.login_required(role="admin")       
 def delete_category(category_id):
     query = CategorieModel.query.get(category_id)
 
