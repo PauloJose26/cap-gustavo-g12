@@ -7,7 +7,7 @@ from app.config.database import db
 
 @dataclass
 class PartnerModel(db.Model):
-    id: int
+    id: str
     name: str
     email: str
     cnpj: str

@@ -2,4 +2,5 @@ venv
 .env
 __pycache__
 main.py
+.VSCodeCounter/
 .vscode

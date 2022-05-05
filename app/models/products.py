@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from sqlalchemy import Column, String, Numeric, DateTime, Boolean, ForeignKey
+from sqlalchemy import Column, String, Numeric, DateTime, Boolean, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, backref
 from uuid import uuid4
@@ -17,7 +17,7 @@ class ProductModel(db.Model):
     auction_start: datetime
     auction_end: datetime
     active: bool
-    id_partner = str
+    partner_id = str
     task_id = str
     categories = list
     
@@ -29,9 +29,9 @@ class ProductModel(db.Model):
     starting_price = Column(Numeric(asdecimal=True), nullable=False)
     auction_start = Column(DateTime)
     auction_end = Column(DateTime)
-    active = Column(Boolean, nullable=False, default=False)
-    task_id = Column(UUID(as_uuid=True), nullable=False, unique=True)
-    id_partner = Column(UUID(as_uuid=True), ForeignKey("partners.id"), nullable=False)
+    active = Column(Boolean, default=False)
+    task_id = Column(UUID(as_uuid=True), nullable=True, unique=True)
+    partner_id = Column(UUID(as_uuid=True), ForeignKey("partners.id"), nullable=False)
     bids = relationship("BidModel", backref=backref("product", uselist=False))
     categories = relationship("CategorieModel", secondary="product_categorie")
     

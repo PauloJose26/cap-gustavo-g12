@@ -1,5 +1,5 @@
 from itertools import product
-from flask import request, current_app, jsonify
+from flask import request,  jsonify
 from app.config.database import db
 from app.models.categories import CategorieModel
 from app.models.products import ProductModel
@@ -12,27 +12,46 @@ from sqlalchemy.exc import IntegrityError
 
 
 def register_product():
+    from app.tasks import close_auction, open_auction
+
     session: Session = db.session()
 
     data:dict = request.get_json()
 
-    partner_id = 1
+    partner_id = "e5a4ab88-73ce-444b-b672-2f1bfa549e7c" #MOCK. Fazer autenticação.
 
     data["partner_id"] = partner_id
-
-    product_info = ProductModel(**data)
     
-    if data.get("categories"):
-        for i in data["categories"]:
-            product_category = session.query(CategorieModel).filter_by(name = i).first()
-            if product_category:
-                product_info.categories.append(product_category)
+    try:
+        
+        if data.get("categories"):
+            for i in data["categories"]:
+                product_category = session.query(CategorieModel).filter_by(name = i).first()
+                if product_category:
+                    product_info.categories.append(product_category)
+        
+        product_info = ProductModel(**data)
+        
+        session.add(product_info)
+        session.commit()
 
-    session.add(product_info)
-    session.commit()
+        open_time = datetime.strptime(data["auction_start"], "%Y-%m-%d %H:%M") - datetime.now()
+        open_auction.delay(product_info.id, open_time.seconds)
+        
+        close_time = datetime.strptime(data["auction_end"], "%Y-%m-%d %H:%M") - datetime.now()
+        task = close_auction.delay(product_info.id, close_time.seconds)
+        
+        
+        setattr(product_info, "task_id", task.task_id)
+        
+        session.add(product_info)
+        session.commit()
 
-    return jsonify(product_info), HTTPStatus.CREATED
 
+        return jsonify(product_info), HTTPStatus.CREATED
+    except:
+        #tratar possíveis erros no registro do produto
+        {"erro":"Verifique sua requisição"}, HTTPStatus.BAD_REQUEST
 
 
 def update_product(product_id):

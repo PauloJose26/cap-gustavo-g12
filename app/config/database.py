@@ -1,8 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
+import dotenv
 
 db = SQLAlchemy()
+
+dotenv.load_dotenv()
+
 
 def init_app(app: Flask):
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQL_URI")
