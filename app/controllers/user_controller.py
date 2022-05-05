@@ -35,7 +35,7 @@ def register_user():
 
     return jsonify(user_info), HTTPStatus.CREATED
 
-
+@auth.login_required
 def update_user(user_id):
     data = request.get_json()
     session = current_app.db.session
@@ -64,7 +64,6 @@ def delete_user(user_id):
     session: Session = db.session()
 
     record = session.query(UserModel).get(user_id)
-    print(record)
 
     if record.role == "admin":
         return {"error": "Cannot Delete an Admin"}, HTTPStatus.UNAUTHORIZED
@@ -78,16 +77,14 @@ def delete_user(user_id):
 
 @auth.login_required(role="admin")
 def get_user():
-    # adm route
     base_query: Query = db.session.query(UserModel)
 
     records = base_query.all()
 
     return jsonify(records), HTTPStatus.OK
 
-
+@auth.login_required(role="admin")
 def get_user_by_id(user_id):
-    # adm route
     user: UserModel = UserModel.query.filter_by(id=user_id).first()
     if user:
         return jsonify(user), HTTPStatus.OK
@@ -102,9 +99,9 @@ def login():
     user = session.query(UserModel).filter_by(email=data["email"]).first()
 
     if not user:
-        return {"error": "User not found"}, HTTPStatus.NOT_FOUND
+        return {"error": "Usuário não encontrado"}, HTTPStatus.NOT_FOUND
 
     if user.verify_password(data["password"]):
         return {"Access Token": user.api_key}, HTTPStatus.OK
     else:
-        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+        return {"error": "Não autorizado"}, HTTPStatus.UNAUTHORIZED

@@ -8,7 +8,7 @@ from app.routes.bid_routes import bp as bp_bids
 
 def init_app(app: Flask):
 
-    bp_api = Blueprint("api", __name__, url_prefix="/api")
+    bp_api = Blueprint("", __name__, url_prefix="")
     bp_api.register_blueprint(bp_bids)
     bp_api.register_blueprint(bp_partner)
     bp_api.register_blueprint(bp_users)

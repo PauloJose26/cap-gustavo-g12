@@ -1,6 +1,7 @@
 from app.models import BidModel, ProductModel, UserModel
 from app.config.database import db
 from app.exceptions import BidsError
+from app.config.auth import auth
 
 from http import HTTPStatus
 from flask import jsonify, request
@@ -8,8 +9,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 
 
-
-
+@auth.login_required
 def register_bid():
     date = datetime.now()
     data: dict = request.get_json()
