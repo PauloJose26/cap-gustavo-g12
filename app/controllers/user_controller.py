@@ -6,34 +6,41 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.orm import Query
 from app.controllers.address_controller import register_address
 from app.models.users import UserModel
+from app.models.addresses import AddressModel
 import secrets
 from app.config.auth import auth
+from sqlalchemy.exc import DataError, IntegrityError
 
 
 def register_user():
-    session: Session = db.session()
+    try: 
+        session: Session = db.session()
 
-    data = request.get_json()
+        data = request.get_json()
 
-    password_to_hash = data.pop("password")
+        password_to_hash = data.pop("password")
 
-    address = register_address(data["address"])
+        address = register_address(data["address"])
 
-    data.pop("address")
-    data["id_address"] = address.id
+        data.pop("address")
+        data["id_address"] = address.id
 
-    data["api_key"] = secrets.token_urlsafe(32)
+        data["api_key"] = secrets.token_urlsafe(32)
 
-    data["role"] = "user"
+        data["role"] = "user"
 
-    user_info = UserModel(**data)
+        user_info = UserModel(**data)
 
-    user_info.password = password_to_hash
+        user_info.password = password_to_hash
 
-    session.add(user_info)
-    session.commit()
+        session.add(user_info)
+        session.commit()
 
-    return jsonify(user_info), HTTPStatus.CREATED
+        return jsonify(user_info), HTTPStatus.CREATED
+    except (TypeError, IntegrityError) as err:
+        if "(psycopg2.errors.UniqueViolation)" in str(err):
+            return {"error msg": "cpf or email already exists"}, HTTPStatus.CONFLICT
+        return {"error msg" : "key missing or wrong spelling", "keys user": ["name", "email", "cpf", "phone_number", "birth_date", "password"], "keys address": ["country", "state", "city", "street", "number", "complement", "postal_code"]}, HTTPStatus.BAD_REQUEST
 
 @auth.login_required
 def update_user(user_id):
@@ -61,18 +68,24 @@ def update_user(user_id):
 
 @auth.login_required
 def delete_user(user_id):
-    session: Session = db.session()
+    try:
+        session: Session = db.session()
 
-    record = session.query(UserModel).get(user_id)
+        user_record = session.query(UserModel).get(user_id)
 
-    if record.role == "admin":
-        return {"error": "Cannot Delete an Admin"}, HTTPStatus.UNAUTHORIZED
+        address_record = session.query(AddressModel).get(user_record.id_address)
 
-    session.delete(record)
+        if user_record.role == "admin":
+            return {"error": "Cannot Delete an Admin"}, HTTPStatus.UNAUTHORIZED
 
-    session.commit()
+        session.delete(user_record)
+        session.commit()
+        session.delete(address_record)
+        session.commit()
 
-    return "", HTTPStatus.NO_CONTENT
+        return "", HTTPStatus.NO_CONTENT
+    except DataError:
+        return {"error": "Usuário não encontrado"}, HTTPStatus.NOT_FOUND
 
 
 @auth.login_required(role="admin")
