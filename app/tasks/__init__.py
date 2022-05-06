@@ -40,8 +40,7 @@ def open_auction(product_id, auction_start):
     session: Session = db.session()
     product: Query = session.query(ProductModel).get(product_id)
     
-    print(product)
-    
+
     print("Open_auction complete")
     
     setattr(product, "active", True)

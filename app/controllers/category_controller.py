@@ -63,6 +63,7 @@ def patch_category(category_id):
 
 @auth.login_required(role="admin")       
 def delete_category(category_id):
+    
     query = CategorieModel.query.get(category_id)
 
     current_app.db.session.delete(query)
