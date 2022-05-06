@@ -10,13 +10,13 @@ from http import HTTPStatus
 from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 import os
-from app.config.auth import auth
+from app.config.auth import auth, auth_partner
 
 load_dotenv()
 
 
 
-@auth.login_required(role="partner")
+@auth_partner.login_required
 def register_product():
     from app.tasks import close_auction, open_auction
 
@@ -69,7 +69,7 @@ def register_product():
         {"erro":"Verifique sua requisição"}, HTTPStatus.BAD_REQUEST
 
 
-@auth.login_required(role="partner")
+@auth_partner.login_required
 def update_product(product_id):
     session: Session = db.session()
 

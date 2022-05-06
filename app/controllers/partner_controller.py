@@ -5,7 +5,7 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.orm import Query
 from app.controllers.address_controller import register_address
 from app.models.partners import PartnerModel
-from app.config.auth import auth
+from app.config.auth import auth, auth_partner
 import secrets
 
 
@@ -30,7 +30,7 @@ def register_partner():
 
     return jsonify(partner_info), HTTPStatus.CREATED
 
-@auth.login_required
+@auth_partner.login_required
 def get_partners():
     base_query: Query = db.session.query(PartnerModel)
     
@@ -38,7 +38,7 @@ def get_partners():
 
     return jsonify(records), HTTPStatus.OK
 
-@auth.login_required
+@auth_partner.login_required
 def get_partner_by_id(partner_id):
     partner: PartnerModel = PartnerModel.query.filter_by(id=partner_id).first()
 
