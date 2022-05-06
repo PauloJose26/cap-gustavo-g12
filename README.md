@@ -28,7 +28,7 @@
 }
 ```
 
-**Retorno da requisição**
+**Formato de resposta**
 
 ```json
 {
@@ -43,7 +43,7 @@
 
 #### GET /partners
 
-**Retorno da requisição**
+**Formato de resposta**
 
 ```json
 [
@@ -64,7 +64,7 @@
 
 #### GET /partners/<partner_id>
 
-**Retorno da requisição**
+**Formato de resposta**
 
 ```json
 {
@@ -103,6 +103,180 @@
 
 #### GET /categories
 
+**Formato de resposta**
+
 ```json
-{}
+[
+  {
+    "description": "Descrição",
+    "id": "<id-hash>",
+    "name": "Nome"
+  },
+  {
+    "description": "Descrição",
+    "id": "<id-hash>",
+    "name": "Nome 2"
+  }
+]
+```
+
+#### GET /categories/<category_id>
+
+**Formato de resposta**
+
+```json
+{
+  "description": "Descrição",
+  "id": "<id-hash>",
+  "name": "Nome"
+}
+```
+
+#### PATCH /categories/<category_id>
+
+**Formato da requisição**
+
+```json
+{
+  "description": "Nova descrição"
+}
+```
+
+#### DELETE /categories/<category_id>
+
+**Formato de resposta**
+
+```json
+{
+  "sucesso": "A categoria foi removida com sucesso"
+}
+```
+
+## Users
+
+#### POST /users
+
+**Formato da requisição**
+
+```json
+{
+  "name": "Nome",
+  "email": "mail@email.com",
+  "cpf": "XXXXXXXXXXX",
+  "phone_number": "XXXXXXXXX",
+  "birth_date": "DD/MM/YYYY",
+  "password": "xxxxxx",
+  "address": {
+    "country": "Brazil",
+    "state": "PR",
+    "city": "Curitiba",
+    "street": "Rua Tal",
+    "number": "XXX",
+    "complement": "",
+    "postal_code": "XXXXXXXX"
+  }
+}
+```
+
+#### GET /users/<user_id>
+
+**Formato da resposta**
+
+```json
+{
+  "api_key": "<auth-token>",
+  "birth_date": "Thu, 01 Jan 1001 00:00:00 GMT",
+  "cpf": "XXXXXXXXXXX",
+  "email": "mail@email.com",
+  "id": "<hash-id>",
+  "name": "Nome",
+  "phone_number": "XXXXXXXXXXX",
+  "role": "user"
+}
+```
+
+#### GET /users
+
+**Formato da resposta**
+
+```json
+[
+  {
+    "api_key": "<auth-token>",
+    "birth_date": "Thu, 01 Jan 1001 00:00:00 GMT",
+    "cpf": "XXXXXXXXXXX",
+    "email": "mail@email.com",
+    "id": "<hash-id>",
+    "name": "Nome",
+    "phone_number": "XXXXXXXXXXX",
+    "role": "user"
+  },
+  {
+    "api_key": "<auth-token>",
+    "birth_date": "Thu, 01 Jan 1001 00:00:00 GMT",
+    "cpf": "XXXXXXXXXXX",
+    "email": "mail@email.com",
+    "id": "<hash-id>",
+    "name": "Nome",
+    "phone_number": "XXXXXXXXXXX",
+    "role": "user"
+  },
+  {
+    "api_key": "<auth-token>",
+    "birth_date": "Thu, 01 Jan 1001 00:00:00 GMT",
+    "cpf": "XXXXXXXXXXX",
+    "email": "mail@email.com",
+    "id": "<hash-id>",
+    "name": "Nome",
+    "phone_number": "XXXXXXXXXXX",
+    "role": "user"
+  }
+]
+```
+
+#### DELETE /users/<user_id>
+
+**Formato de resposta**
+
+```json
+    {
+        ""
+    }
+```
+
+#### PATCH /users/<user_id>
+
+**Formato da requisição**
+
+```json
+    {
+        "<field>":"<value>"
+    }
+    **** Formato da resposta ****
+    {
+        "<field>":"<value>"
+    }
+```
+
+## BIDS
+
+#### POST /bids
+
+**Formato de requisição**
+
+```json
+{
+  "id_product": "42a629b4-fb57-4af2-b1cd-103fe0646604",
+  "price": "50",
+  "id_user": "2fa7e80c-4584-4343-ad5b-3f194472b620"
+}
+```
+
+**Formato de resposta**
+
+```json
+{
+  "id": "447fa3f4-ccda-4d73-ad25-47f5ff542d69",
+  "price": "50"
+}
 ```
