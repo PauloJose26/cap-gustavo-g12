@@ -24,37 +24,34 @@ def register_product():
 
     data:dict = request.get_json()
 
-    partner_id = "e5a4ab88-73ce-444b-b672-2f1bfa549e7c" #MOCK. Fazer autenticação.
-
-    data["partner_id"] = partner_id
-    
+    data["partner_id"] = auth.current_user().id
     open_time = datetime.strptime(data["auction_start"], "%Y-%m-%d %H:%M") - datetime.now()
     close_time = datetime.strptime(data["auction_end"], "%Y-%m-%d %H:%M") - datetime.now()
     
     try:
-        
+        new_list = []
         if data.get("categories"):
-            for i in data["categories"]:
+            new_list = data["categories"]
+            data.pop("categories")
+        product_info = ProductModel(**data)
+
+        if new_list:
+            for i in new_list:
                 product_category = session.query(CategorieModel).filter_by(name = i).first()
                 if product_category:
                     product_info.categories.append(product_category)
-        
-        product_info = ProductModel(**data)
-        
+
         session.add(product_info)
         session.commit()
 
-        
         open_auction.delay(product_info.id, open_time.seconds)
         task = close_auction.delay(product_info.id, close_time.seconds)
-        
-        
+
+
         setattr(product_info, "task_id", task.task_id)
-        
+
         # session.add(product_info)
         session.commit()
-
-
         return jsonify(product_info), HTTPStatus.CREATED
     except:
         #tratar possíveis erros no registro do produto
@@ -66,9 +63,9 @@ def update_product(product_id):
     session: Session = db.session()
 
     data = request.get_json()
-
-    product: Query = db.session.query(ProductModel).filter_by(id = product_id).first()
-
+    
+    product = ProductModel.query.get(product_id)
+    print(product)
     for key, value in data.items():
         setattr(product, key, value)
 
@@ -88,6 +85,8 @@ def get_products():
 
 @auth.login_required
 def get_product_by_id(product_id):
-    product: Query = db.session.query(ProductModel).filter_by(id = product_id).first()
+    
+    product: ProductModel = ProductModel.query.filter_by(id = product_id).first()
 
     return jsonify(product), HTTPStatus.OK
+

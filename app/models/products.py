@@ -17,9 +17,9 @@ class ProductModel(db.Model):
     auction_start: datetime
     auction_end: datetime
     active: bool
-    partner_id = str
-    task_id = str
-    categories = list
+    partner_id: str
+    task_id: str
+    categories: list
     
     __tablename__ = "products"
     

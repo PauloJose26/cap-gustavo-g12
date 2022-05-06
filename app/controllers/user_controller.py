@@ -54,7 +54,7 @@ def update_user(user_id):
         session.add(user)
         session.commit()
 
-        return data, HTTPStatus.OK
+        return jsonify(user), HTTPStatus.OK
 
     except IntegrityError as err:
         if "(psycopg2.errors.UniqueViolation)" in str(err):

@@ -13,13 +13,13 @@ from datetime import datetime, timedelta
 def register_bid():
     date = datetime.now()
     data: dict = request.get_json()
-    data = { key: value for key, value in data.items if key in BidModel.keys_valid }
-    if not data.get("user_id") or not data.get("product_id") or not data.get("price"):
-        raise BidsError({ "error": "Chaves insuficiente", "chaves": [ "price", "user_id" ] })
+    data = { key: value for key, value in data.items() if key in BidModel.keys_valid }
+    if not data.get("id_user") or not data.get("id_product") or not data.get("price"):
+        raise BidsError({ "error": "Chaves insuficiente", "chaves": [ "price", "id_user" ] })
     
     session: Session = db.session
-    product: ProductModel = session.query(ProductModel).get(data["product_id"])
-    user: UserModel = session.query(UserModel).get(data["user_id"])
+    product: ProductModel = session.query(ProductModel).get(data["id_product"])
+    user: UserModel = session.query(UserModel).get(data["id_user"])
     
     if not product or not user:
         raise BidsError({ "error": "Produtos não encontrado" })
@@ -27,7 +27,7 @@ def register_bid():
         raise BidsError({ "error": "Fora do  prazo do leilão" })
     
     bid = BidModel(**data)
-    bids:list[BidModel] = session.query(BidModel).join(ProductModel).filter(BidModel.id_product == data["product_id"]).order_by(BidModel.price).all().reverse()
+    bids:list[BidModel] = session.query(BidModel).join(ProductModel).filter(BidModel.id_product == data["id_product"]).order_by(BidModel.price).all().reverse()
     if len(bids) > 0 and bid.price <  bids[0].price * 1.1:
         raise BidsError({ "error": "O preço precisa estar acima de 10% do preco anterior" })
     

@@ -30,15 +30,23 @@ def register_partner():
 
     return jsonify(partner_info), HTTPStatus.CREATED
 
-@auth_partner.login_required
 def get_partners():
     base_query: Query = db.session.query(PartnerModel)
     
-    records = base_query.all()
+    partners = base_query.all()
+    
+    serializer = [
+        {
+            "id":partner.id,
+            "name": partner.name,
+            "email": partner.email,
+            "phone": partner.phone_number,
+        } for partner in partners
+    ]
+    
+    return jsonify(serializer), HTTPStatus.OK
 
-    return jsonify(records), HTTPStatus.OK
-
-@auth_partner.login_required
+# @auth_partner.login_required
 def get_partner_by_id(partner_id):
     partner: PartnerModel = PartnerModel.query.filter_by(id=partner_id).first()
 
