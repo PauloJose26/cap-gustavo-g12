@@ -6,7 +6,7 @@
 
 #### POST /partners
 
-**Formato da requisição**
+_Formato da requisição_
 
 ```json
 {
@@ -28,7 +28,7 @@
 }
 ```
 
-**Formato de resposta**
+_Formato de resposta_
 
 ```json
 {
@@ -43,7 +43,7 @@
 
 #### GET /partners
 
-**Formato de resposta**
+_Formato de resposta_
 
 ```json
 [
@@ -64,7 +64,7 @@
 
 #### GET /partners/<partner_id>
 
-**Formato de resposta**
+_Formato de resposta_
 
 ```json
 {
@@ -79,7 +79,7 @@
 
 #### POST /partners/login
 
-**Formato da requisição**
+_Formato da requisição_
 
 ```json
 {
@@ -92,7 +92,7 @@
 
 #### POST /categories
 
-**Formato da requisição**
+_Formato da requisição_
 
 ```json
 {
@@ -103,7 +103,7 @@
 
 #### GET /categories
 
-**Formato de resposta**
+_Formato de resposta_
 
 ```json
 [
@@ -122,7 +122,7 @@
 
 #### GET /categories/<category_id>
 
-**Formato de resposta**
+_Formato de resposta_
 
 ```json
 {
@@ -134,7 +134,7 @@
 
 #### PATCH /categories/<category_id>
 
-**Formato da requisição**
+_Formato da requisição_
 
 ```json
 {
@@ -144,7 +144,7 @@
 
 #### DELETE /categories/<category_id>
 
-**Formato de resposta**
+_Formato de resposta_
 
 ```json
 {
@@ -156,7 +156,7 @@
 
 #### POST /users
 
-**Formato da requisição**
+_Formato da requisição_
 
 ```json
 {
@@ -180,7 +180,7 @@
 
 #### GET /users/<user_id>
 
-**Formato da resposta**
+_Formato da resposta_
 
 ```json
 {
@@ -197,7 +197,7 @@
 
 #### GET /users
 
-**Formato da resposta**
+_Formato da resposta_
 
 ```json
 [
@@ -236,7 +236,7 @@
 
 #### DELETE /users/<user_id>
 
-**Formato de resposta**
+_Formato de resposta_
 
 ```json
     {
@@ -246,23 +246,27 @@
 
 #### PATCH /users/<user_id>
 
-**Formato da requisição**
+_Formato da requisição_
 
 ```json
-    {
-        "<field>":"<value>"
-    }
-    **** Formato da resposta ****
-    {
-        "<field>":"<value>"
-    }
+{
+  "<field>": "<value>"
+}
+```
+
+_Formato da resposta_
+
+```json
+{
+  "<field>": "<value>"
+}
 ```
 
 ## BIDS
 
 #### POST /bids
 
-**Formato de requisição**
+_Formato de requisição_
 
 ```json
 {
@@ -272,7 +276,7 @@
 }
 ```
 
-**Formato de resposta**
+_Formato de resposta_
 
 ```json
 {
