@@ -37,6 +37,7 @@ class ProductModel(db.Model):
     
     @classmethod
     def verify_data(cls, new_date: datetime):
+        print(cls.auction_start,type(cls.auction_start))
         date_start = (cls.auction_start.year, cls.auction_start.month, cls.auction_start.day, cls.auction_start.hour, cls.auction_start.month, cls.auction_start.second)
         date_end = (cls.auction_end.year, cls.auction_end.month, cls.auction_end.day, cls.auction_end.hour, cls.auction_end.month, cls.auction_end.second)
         date = (new_date.year, new_date.month, new_date.day, new_date.hour, new_date.month, new_date.second)

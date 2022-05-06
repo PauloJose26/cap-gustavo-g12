@@ -10,7 +10,7 @@ from http import HTTPStatus
 from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 import os
-from app.config.auth import auth, auth_partner
+from app.config.auth import auth_user, auth_partner
 
 load_dotenv()
 
@@ -24,7 +24,7 @@ def register_product():
 
     data:dict = request.get_json()
 
-    data["partner_id"] = auth.current_user().id
+    data["partner_id"] = auth_user.current_user().id
     open_time = datetime.strptime(data["auction_start"], "%Y-%m-%d %H:%M") - datetime.now()
     close_time = datetime.strptime(data["auction_end"], "%Y-%m-%d %H:%M") - datetime.now()
     
@@ -75,7 +75,7 @@ def update_product(product_id):
     return jsonify(product), HTTPStatus.ACCEPTED
 
 
-@auth.login_required
+@auth_user.login_required
 def get_products():
     products_list_query: Query = db.session.query(ProductModel)
     products_list = products_list_query.all()
@@ -83,7 +83,7 @@ def get_products():
     return jsonify(products_list), HTTPStatus.OK
 
 
-@auth.login_required
+@auth_user.login_required
 def get_product_by_id(product_id):
     
     product: ProductModel = ProductModel.query.filter_by(id = product_id).first()

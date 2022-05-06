@@ -2,9 +2,9 @@ from flask import request, current_app, jsonify
 from app.models.categories import CategorieModel
 from http import HTTPStatus
 from sqlalchemy.exc import IntegrityError
-from app.config.auth import auth, auth_partner
+from app.config.auth import auth_user, auth_partner
 
-@auth.login_required
+@auth_user.login_required
 def get_categories():
     categories = (current_app.db.session.query(CategorieModel).all())
 
@@ -18,7 +18,7 @@ def get_categories():
     
     return jsonify(serializer)
 
-@auth.login_required
+@auth_user.login_required
 def get_category_by_id(category_id):
     category = current_app.db.session.query(CategorieModel).get(category_id)
     

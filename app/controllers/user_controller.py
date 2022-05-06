@@ -8,7 +8,7 @@ from app.controllers.address_controller import register_address
 from app.models.users import UserModel
 from app.models.addresses import AddressModel
 import secrets
-from app.config.auth import auth
+from app.config.auth import auth_user
 from sqlalchemy.exc import DataError, IntegrityError
 
 
@@ -42,7 +42,7 @@ def register_user():
             return {"error msg": "cpf or email already exists"}, HTTPStatus.CONFLICT
         return {"error msg" : "key missing or wrong spelling", "keys user": ["name", "email", "cpf", "phone_number", "birth_date", "password"], "keys address": ["country", "state", "city", "street", "number", "complement", "postal_code"]}, HTTPStatus.BAD_REQUEST
 
-@auth.login_required
+@auth_user.login_required
 def update_user(user_id):
     data = request.get_json()
     session = current_app.db.session
@@ -66,7 +66,7 @@ def update_user(user_id):
         return {"msg": "Usuário não encontrado"}, HTTPStatus.NOT_FOUND
 
 
-@auth.login_required
+@auth_user.login_required
 def delete_user(user_id):
     try:
         session: Session = db.session()
@@ -88,7 +88,7 @@ def delete_user(user_id):
         return {"error": "Usuário não encontrado"}, HTTPStatus.NOT_FOUND
 
 
-@auth.login_required
+@auth_user.login_required
 def get_user():
     base_query: Query = db.session.query(UserModel)
 
@@ -96,7 +96,7 @@ def get_user():
 
     return jsonify(records), HTTPStatus.OK
 
-@auth.login_required
+@auth_user.login_required
 def get_user_by_id(user_id):
     user: UserModel = UserModel.query.filter_by(id=user_id).first()
     if user:

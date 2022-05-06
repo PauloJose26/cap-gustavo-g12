@@ -5,14 +5,14 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.orm import Query
 from app.controllers.address_controller import register_address
 from app.models.partners import PartnerModel
-from app.config.auth import auth, auth_partner
+from app.config.auth import auth_user, auth_partner
 import secrets
 
 
 def register_partner():
     #adm route
     session: Session = db.session()
-    print(auth.current_user())
+    print(auth_user.current_user())
 
     data = request.get_json()
 
