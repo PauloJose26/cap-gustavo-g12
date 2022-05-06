@@ -6,11 +6,13 @@ from sqlalchemy.orm import Query
 from app.controllers.address_controller import register_address
 from app.models.partners import PartnerModel
 from app.config.auth import auth
+import secrets
 
 @auth.login_required(role="admin")
 def register_partner():
     #adm route
     session: Session = db.session()
+    print(auth.current_user())
 
     data = request.get_json()
 
@@ -18,6 +20,8 @@ def register_partner():
 
     data.pop("address")
     data["id_address"] = address.id
+    data["role"] = "partner"
+    data["api_key"] = secrets.token_urlsafe(32)
 
     partner_info = PartnerModel(**data)
 
@@ -41,4 +45,19 @@ def get_partner_by_id(partner_id):
     if partner:
         return jsonify(partner), HTTPStatus.OK
     return {"msg": "Parceiro não encontrado"}, HTTPStatus.NOT_FOUND
+
+def partner_login():
+    session: Session = db.session()
+
+    data = request.get_json()
+
+    partner = session.query(PartnerModel).filter_by(email=data["email"]).first()
+
+    if not partner:
+        return {"error": "Parceiro não encontrado"}, HTTPStatus.NOT_FOUND
+
+    if partner.verify_password(data["password"]):
+        return {"Access Token": partner.api_key}, HTTPStatus.OK
+    else:
+        return {"error": "Senha não autorizada"}, HTTPStatus.UNAUTHORIZED
     

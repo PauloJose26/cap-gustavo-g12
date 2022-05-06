@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from app.config.auth import auth
 
 
-@auth.login_required(role="admin")
+@auth.login_required(role="partner")
 def register_product():
     from app.tasks import close_auction, open_auction
 
@@ -55,7 +55,7 @@ def register_product():
         {"erro":"Verifique sua requisição"}, HTTPStatus.BAD_REQUEST
 
 
-@auth.login_required(role="admin")
+@auth.login_required(role="partner")
 def update_product(product_id):
     session: Session = db.session()
 
