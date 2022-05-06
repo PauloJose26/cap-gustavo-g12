@@ -1,8 +1,8 @@
-"""create table
+"""create tables
 
-Revision ID: cdd781de1ae7
+Revision ID: ab6a200b7f9e
 Revises: 
-Create Date: 2022-05-06 09:23:58.274535
+Create Date: 2022-05-06 10:37:21.156113
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'cdd781de1ae7'
+revision = 'ab6a200b7f9e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -44,6 +44,9 @@ def upgrade():
     sa.Column('phone_number', sa.String(length=12), nullable=False),
     sa.Column('about', sa.String(length=500), nullable=True),
     sa.Column('id_address', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.Column('password_hash', sa.String(length=511), nullable=True),
+    sa.Column('api_key', sa.String(), nullable=True),
+    sa.Column('role', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['id_address'], ['addresses.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('cnpj'),
