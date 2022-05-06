@@ -4,7 +4,7 @@
 
 ## PARTNERS
 
-    POST /partners
+#### POST /partners
 
 **Formato da requisição**
 
@@ -41,7 +41,7 @@
 }
 ```
 
-    GET /partners
+#### GET /partners
 
 **Retorno da requisição**
 
@@ -62,7 +62,7 @@
 ]
 ```
 
-    GET /partners/<partner_id>
+#### GET /partners/<partner_id>
 
 **Retorno da requisição**
 
@@ -77,7 +77,7 @@
 }
 ```
 
-    POST /partners/login
+#### POST /partners/login
 
 **Formato da requisição**
 
@@ -90,7 +90,7 @@
 
 ## Categories
 
-    POST /categories
+#### POST /categories
 
 **Formato da requisição**
 
@@ -101,7 +101,7 @@
 }
 ```
 
-    GET /categories
+#### GET /categories
 
 ```json
 {}
