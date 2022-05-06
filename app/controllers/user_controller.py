@@ -88,7 +88,7 @@ def delete_user(user_id):
         return {"error": "Usuário não encontrado"}, HTTPStatus.NOT_FOUND
 
 
-@auth.login_required(role="admin")
+@auth.login_required
 def get_user():
     base_query: Query = db.session.query(UserModel)
 
@@ -96,7 +96,7 @@ def get_user():
 
     return jsonify(records), HTTPStatus.OK
 
-@auth.login_required(role="admin")
+@auth.login_required
 def get_user_by_id(user_id):
     user: UserModel = UserModel.query.filter_by(id=user_id).first()
     if user:

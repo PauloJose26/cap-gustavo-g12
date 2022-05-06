@@ -8,7 +8,7 @@ from app.models.partners import PartnerModel
 from app.config.auth import auth
 import secrets
 
-@auth.login_required(role="admin")
+
 def register_partner():
     #adm route
     session: Session = db.session()

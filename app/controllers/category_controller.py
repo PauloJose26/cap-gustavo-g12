@@ -24,7 +24,7 @@ def get_category_by_id(category_id):
     
     return jsonify(category)
 
-@auth.login_required(role="admin")
+@auth.login_required(role="partner")
 def register_category():
     data = request.get_json()
     name = data["name"].capitalize()
@@ -42,7 +42,7 @@ def register_category():
         
         return {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
 
-@auth.login_required(role="admin")   
+@auth.login_required(role="partner")   
 def patch_category(category_id):
     data = request.get_json()
 
@@ -61,7 +61,7 @@ def patch_category(category_id):
     except IntegrityError:
         return {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
 
-@auth.login_required(role="admin")       
+@auth.login_required(role="partner")       
 def delete_category(category_id):
     
     query = CategorieModel.query.get(category_id)
