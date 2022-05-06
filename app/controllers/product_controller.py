@@ -8,8 +8,10 @@ from sqlalchemy.orm import Query
 from datetime import datetime, timedelta
 from http import HTTPStatus
 from sqlalchemy.exc import IntegrityError
+from dotenv import load_dotenv
+import os
 
-
+load_dotenv()
 
 def register_product():
     from app.tasks import close_auction, open_auction
@@ -21,6 +23,17 @@ def register_product():
     partner_id = "e5a4ab88-73ce-444b-b672-2f1bfa549e7c" #MOCK. Fazer autenticação.
 
     data["partner_id"] = partner_id
+    
+    open_time = datetime.strptime(data["auction_start"], "%Y-%m-%d %H:%M") - datetime.now()
+    close_time = datetime.strptime(data["auction_end"], "%Y-%m-%d %H:%M") - datetime.now()
+    
+    if open_time.seconds <= 60:
+        return {"erro": "A data de início do leilão deve ser de no mínimo 1 minuto à partir do horário atual"}, HTTPStatus.NOT_ACCEPTABLE
+    
+    if close_time.seconds > os.getenv('CLOSE_TIME'):
+        return {"erro": "O tempo máximo de duração do leilão é de 24 horas." }, HTTPStatus.NOT_ACCEPTABLE
+    
+    
     
     try:
         
@@ -35,16 +48,14 @@ def register_product():
         session.add(product_info)
         session.commit()
 
-        open_time = datetime.strptime(data["auction_start"], "%Y-%m-%d %H:%M") - datetime.now()
-        open_auction.delay(product_info.id, open_time.seconds)
         
-        close_time = datetime.strptime(data["auction_end"], "%Y-%m-%d %H:%M") - datetime.now()
+        open_auction.delay(product_info.id, open_time.seconds)
         task = close_auction.delay(product_info.id, close_time.seconds)
         
         
         setattr(product_info, "task_id", task.task_id)
         
-        session.add(product_info)
+        # session.add(product_info)
         session.commit()
 
 

@@ -47,7 +47,5 @@ def register_bid():
     
     session.add(bid)
     session.commit()
-    session.add(product)
-    session.commit()
     
     return jsonify(bid), HTTPStatus.OK

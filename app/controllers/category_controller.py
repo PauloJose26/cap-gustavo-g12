@@ -59,6 +59,7 @@ def patch_category(category_id):
         return {"erro": "Categoria já existente. Insira outro nome."}, HTTPStatus.CONFLICT
         
 def delete_category(category_id):
+    
     query = CategorieModel.query.get(category_id)
 
     current_app.db.session.delete(query)
