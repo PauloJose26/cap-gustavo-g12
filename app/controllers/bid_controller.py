@@ -27,7 +27,7 @@ def register_bid():
         raise BidsError({ "error": "Fora do  prazo do leilão" })
     
     bid = BidModel(**data)
-    bids:list[BidModel] = session.query(BidModel).join(ProductModel.id == BidModel.id_product).order_by(BidModel.price).all().reverse()
+    bids:list[BidModel] = session.query(BidModel).join(ProductModel).filter(BidModel.id_product == data["product_id"]).order_by(BidModel.price).all().reverse()
     if len(bids) > 0 and bid.price <  bids[0].price * 1.1:
         raise BidsError({ "error": "O preço precisa estar acima de 10% do preco anterior" })
     
