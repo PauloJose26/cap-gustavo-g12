@@ -10,9 +10,13 @@ from http import HTTPStatus
 from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 import os
+from app.config.auth import auth
 
 load_dotenv()
 
+
+
+@auth.login_required(role="admin")
 def register_product():
     from app.tasks import close_auction, open_auction
 
@@ -65,6 +69,7 @@ def register_product():
         {"erro":"Verifique sua requisição"}, HTTPStatus.BAD_REQUEST
 
 
+@auth.login_required(role="admin")
 def update_product(product_id):
     session: Session = db.session()
 
@@ -81,7 +86,7 @@ def update_product(product_id):
     return jsonify(product), HTTPStatus.ACCEPTED
 
 
-
+@auth.login_required
 def get_products():
     products_list_query: Query = db.session.query(ProductModel)
     products_list = products_list_query.all()
@@ -89,7 +94,7 @@ def get_products():
     return jsonify(products_list), HTTPStatus.OK
 
 
-
+@auth.login_required
 def get_product_by_id(product_id):
     product: Query = db.session.query(ProductModel).filter_by(id = product_id).first()
 
