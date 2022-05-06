@@ -1,5 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from datetime import datetime
+from math import prod
 from sqlalchemy import Column, String, Numeric, DateTime, Boolean, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, backref
@@ -36,11 +37,9 @@ class ProductModel(db.Model):
     categories = relationship("CategorieModel", secondary="product_categorie")
     
     @classmethod
-    def verify_data(cls, new_date: datetime):
-        print(cls.auction_start,type(cls.auction_start))
-        date_start = (cls.auction_start.year, cls.auction_start.month, cls.auction_start.day, cls.auction_start.hour, cls.auction_start.month, cls.auction_start.second)
-        date_end = (cls.auction_end.year, cls.auction_end.month, cls.auction_end.day, cls.auction_end.hour, cls.auction_end.month, cls.auction_end.second)
+    def verify_data(cls, new_date: datetime, date_start: datetime, date_end: datetime):
+        date_start_tuple = (date_start.year, date_start.month, date_start.day, date_start.hour, date_start.month, date_start.second)
+        date_end_tuple = (date_end.year, date_end.month, date_end.day, date_end.hour, date_end.month, date_end.second)
         date = (new_date.year, new_date.month, new_date.day, new_date.hour, new_date.month, new_date.second)
-        
-        return date_start < date < date_end
-    
+        print(date_start_tuple)
+        return date >= date_start_tuple and date < date_end_tuple

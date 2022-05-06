@@ -23,27 +23,28 @@ def register_bid():
     
     if not product or not user:
         raise BidsError({ "error": "Produtos não encontrado" })
-    if product.active and product.verify_data(date):
+    if product.active and not product.verify_data(date,product.auction_start,product.auction_end):
         raise BidsError({ "error": "Fora do  prazo do leilão" })
     
     bid = BidModel(**data)
-    bids:list[BidModel] = session.query(BidModel).join(ProductModel).filter(BidModel.id_product == data["id_product"]).order_by(BidModel.price).all().reverse()
-    if len(bids) > 0 and bid.price <  bids[0].price * 1.1:
+    bids:list[BidModel] = session.query(BidModel).filter(BidModel.id_product == data["id_product"]).order_by(BidModel.price.desc()).all()
+    print(bids)
+    if  bids and float(bid.price) <  float(bids[0].price) * 1.1:
         raise BidsError({ "error": "O preço precisa estar acima de 10% do preco anterior" })
     
-    if product.auction_end.minute - date.minute <= 2:
-        from app.tasks import close_auction
-        from app.tasks import celery_init
+    # if product.auction_end.minute - date.minute <= 2:
+    #     from app.tasks import close_auction
+    #     from app.tasks import celery_init
         
-        celery_init.control.revoke(product.task_id, Terminate=True)
+    #     celery_init.control.revoke(product.task_id, Terminate=True)
         
-        new_auction_end = product.auction_end + timedelta(seconds=30)
-        setattr(product, "auction_end", new_auction_end)
+    #     new_auction_end = product.auction_end + timedelta(seconds=30)
+    #     setattr(product, "auction_end", new_auction_end)
         
-        close_time = datetime.strptime(new_auction_end, "%Y-%m-%d %H:%M") - datetime.now()
-        task = close_auction.delay(product.id, close_time)
+    #     close_time = datetime.strptime(new_auction_end, "%Y-%m-%d %H:%M") - datetime.now()
+    #     task = close_auction.delay(product.id, close_time)
         
-        setattr(product, "task_id", task.id)
+    #     setattr(product, "task_id", task.id)
     
     session.add(bid)
     session.commit()
