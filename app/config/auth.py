@@ -3,19 +3,16 @@ from app.models.users import UserModel
 from app.models.partners import PartnerModel
 from app.config.database import db
 
-auth = HTTPTokenAuth()
+auth_user = HTTPTokenAuth()
 
-@auth.verify_token
+@auth_user.verify_token
 def verify_token(api_key: str):
     user = UserModel.query.filter_by(api_key=api_key).first()
     if user:
         return user
-
-    partner = db.session.query(PartnerModel).filter_by(api_key=api_key).first()
-    if partner:
-        return partner
     
-@auth.get_user_roles
+
+@auth_user.get_user_roles
 def get_user_roles(user):
     return user.role
 
