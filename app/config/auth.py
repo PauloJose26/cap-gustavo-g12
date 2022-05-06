@@ -1,5 +1,6 @@
 from flask_httpauth import HTTPTokenAuth
 from app.models.users import UserModel
+from app.models.partners import PartnerModel
 from app.config.database import db
 
 auth = HTTPTokenAuth()
@@ -10,7 +11,7 @@ def verify_token(api_key: str):
     if user:
         return user
 
-    partner = db.session.query.filter_by(api_key=api_key).first()
+    partner = db.session.query(PartnerModel).filter_by(api_key=api_key).first()
     if partner:
         return partner
     
@@ -23,7 +24,7 @@ auth_partner = HTTPTokenAuth()
 
 @auth_partner.verify_token
 def verify_token_papartner(api_key: str):
-    partner = db.session.query.filter_by(api_key=api_key).first()
+    partner = db.session.query(PartnerModel).filter_by(api_key=api_key).first()
     
     if partner:
         return partner
