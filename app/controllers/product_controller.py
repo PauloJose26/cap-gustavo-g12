@@ -75,7 +75,7 @@ def update_product(product_id):
     return jsonify(product), HTTPStatus.ACCEPTED
 
 
-@auth_user.login_required
+
 def get_products():
     products_list_query: Query = db.session.query(ProductModel)
     products_list = products_list_query.all()
@@ -83,7 +83,7 @@ def get_products():
     return jsonify(products_list), HTTPStatus.OK
 
 
-@auth_user.login_required
+
 def get_product_by_id(product_id):
     
     product: ProductModel = ProductModel.query.filter_by(id = product_id).first()
