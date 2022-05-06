@@ -31,14 +31,6 @@ def register_product():
     open_time = datetime.strptime(data["auction_start"], "%Y-%m-%d %H:%M") - datetime.now()
     close_time = datetime.strptime(data["auction_end"], "%Y-%m-%d %H:%M") - datetime.now()
     
-    if open_time.seconds <= 60:
-        return {"erro": "A data de início do leilão deve ser de no mínimo 1 minuto à partir do horário atual"}, HTTPStatus.NOT_ACCEPTABLE
-    
-    if close_time.seconds > os.getenv('CLOSE_TIME'):
-        return {"erro": "O tempo máximo de duração do leilão é de 24 horas." }, HTTPStatus.NOT_ACCEPTABLE
-    
-    
-    
     try:
         
         if data.get("categories"):
