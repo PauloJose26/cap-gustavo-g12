@@ -28,7 +28,7 @@ def register_bid():
     
     bid = BidModel(**data)
     bids:list[BidModel] = session.query(BidModel).join(ProductModel.id == BidModel.id_product).order_by(BidModel.price).all().reverse()
-    if bid.price <  bids[0].price * 1.1:
+    if len(bids) > 0 and bid.price <  bids[0].price * 1.1:
         raise BidsError({ "error": "O preço precisa estar acima de 10% do preco anterior" })
     
     if product.auction_end.minute - date.minute <= 2:

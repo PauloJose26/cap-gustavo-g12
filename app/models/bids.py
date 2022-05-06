@@ -8,7 +8,7 @@ from app.config.database import db
 
 @dataclass
 class BidModel(db.Model):
-    keys_valid = [ "user_id", "product_id", "price" ]
+    keys_valid = [ "id_user", "id_product", "price" ]
     
     id: int
     price: Decimal
